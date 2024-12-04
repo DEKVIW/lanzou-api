@@ -1,9 +1,5 @@
 version: '3.8'
 
-networks:
-  lanzou-api-network:
-    external: true
-
 services:
   lanzou-api:
     build:
@@ -12,9 +8,7 @@ services:
     container_name: lanzou-api
     restart: always
     ports:
-      - "36525:8000"
-    networks:
-      - lanzou-api-network
+      - "8000:8000"
     volumes:
       - ../lanzou_api.py:/app/lanzou_api.py
       - ../templates:/app/templates
