@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>蓝奏云直链解析测试</title>
+    <link rel="icon" type="image/png" href="/favicon.ico">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/static/css/common.css">
+    <style>
+        /* test.html 特有的样式 */
+        .result-header {
+            background: #252526;
+            color: #fff;
+            padding: 10px 15px;
+            border-radius: 10px 10px 0 0;
+            font-weight: 500;
+        }
+        #result {
+            padding: 15px;
+            white-space: pre-wrap;
+            font-size: 14px;
+            line-height: 1.5;
+            min-height: 200px;
+        }
+        .success-text { color: #4EC9B0; }
+        .error-text { color: #F48771; }
+        .loading-text { color: #DCDCAA; }
+        .result-table-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .table {
+            margin-bottom: 0;
+        }
+        .table th {
+            background-color: #f8f9fa;
+        }
+        .table td, .table th {
+            padding: 12px 15px;
+            vertical-align: middle;
+        }
+        .input-group {
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="bi bi-house-door"></i> 返回首页
+            </a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="test-card">
+            <h2 class="mb-4">在线测试</h2>
+            
+            <div class="mb-4">
+                <label for="url" class="form-label">蓝奏云分享链接：</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="url" 
+                           placeholder="请输入蓝奏云分享链接，例如：https://www.lanzoui.com/xxxxx">
+                    <input type="text" class="form-control" id="password" style="max-width: 150px;"
+                           placeholder="访问密码（选填）">
+                    <button onclick="parseUrl()" class="btn btn-primary">
+                        <i class="bi bi-lightning-charge"></i> 解析
+                    </button>
+                </div>
+            </div>
+            
+            <div class="result-card">
+                <div class="result-header">
+                    <i class="bi bi-terminal"></i> 解析结果
+                </div>
+                <pre id="result" class="mb-0">等待解析...</pre>
+            </div>
+            
+            <!-- 添加新的用户友好的结果显示 -->
+            <div class="result-table-card mt-4" id="friendly-result" style="display: none;">
+                <div class="result-header">
+                    <i class="bi bi-table"></i> 文件信息
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover mb-0">
+                        <tbody>
+                            <tr>
+                                <th style="width: 120px;">文件名</th>
+                                <td id="result-filename">-</td>
+                            </tr>
+                            <tr>
+                                <th>文件大小</th>
+                                <td id="result-filesize">-</td>
+                            </tr>
+                            <tr>
+                                <th>文件类型</th>
+                                <td id="result-filetype">-</td>
+                            </tr>
+                            <tr>
+                                <th>上传时间</th>
+                                <td id="result-uploadtime">-</td>
+                            </tr>
+                            <tr>
+                                <th>上传者</th>
+                                <td id="result-uploader">-</td>
+                            </tr>
+                            <tr>
+                                <th>下载链接</th>
+                                <td>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="result-download-url" readonly>
+                                        <button class="btn btn-outline-secondary" type="button" onclick="copyDownloadUrl()">
+                                            <i class="bi bi-clipboard"></i> 复制
+                                        </button>
+                                        <a id="direct-download-btn" href="#" class="btn btn-primary" target="_blank">
+                                            <i class="bi bi-download"></i> 下载
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 添加返回顶部按钮 -->
+    <div class="back-to-top" id="backToTop" onclick="scrollToTop()">
+        <i class="bi bi-arrow-up"></i>
+    </div>
+
+    <script src="/static/js/common.js"></script>
+    <!-- 页面特定的脚本 -->
+    <script>
+        // 复制下载链接
+        function copyDownloadUrl() {
+            const downloadUrl = document.getElementById('result-download-url');
+            downloadUrl.select();
+            document.execCommand('copy');
+            
+            // 显示复制成功提示
+            const button = event.currentTarget;
+            const originalText = button.innerHTML;
+            button.innerHTML = '<i class="bi bi-check"></i> 已复制';
+            setTimeout(() => {
+                button.innerHTML = originalText;
+            }, 2000);
+        }
+
+        async function parseUrl() {
+            const url = document.getElementById('url').value;
+            const password = document.getElementById('password').value;
+            const result = document.getElementById('result');
+            const friendlyResult = document.getElementById('friendly-result');
+            
+            if (!url) {
+                result.className = 'error-text';
+                result.textContent = '请输入蓝奏云分享链接';
+                friendlyResult.style.display = 'none';
+                return;
+            }
+            
+            try {
+                result.className = 'loading-text';
+                result.textContent = '解析中...';
+                friendlyResult.style.display = 'none';
+                
+                const response = await fetch('/parse', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        url: url,
+                        password: password || undefined
+                    })
+                });
+                
+                const data = await response.json();
+                result.textContent = JSON.stringify(data, null, 2);
+                
+                if (data.code === 200) {
+                    result.className = 'success-text';
+                    // 更新友好的显示面
+                    document.getElementById('result-filename').textContent = data.data.filename;
+                    document.getElementById('result-filesize').textContent = data.data.file_size;
+                    document.getElementById('result-filetype').textContent = data.data.file_type;
+                    document.getElementById('result-uploadtime').textContent = data.data.upload_time;
+                    document.getElementById('result-uploader').textContent = data.data.uploader;
+                    document.getElementById('result-download-url').value = data.data.download_url;
+                    // 直接设置下载按钮的href为下载链接
+                    const downloadBtn = document.getElementById('direct-download-btn');
+                    downloadBtn.href = data.data.download_url;
+                    friendlyResult.style.display = 'block';
+                } else {
+                    result.className = 'error-text';
+                    friendlyResult.style.display = 'none';
+                }
+            } catch (error) {
+                result.className = 'error-text';
+                result.textContent = '解析失败：' + error.message;
+                friendlyResult.style.display = 'none';
+            }
+        }
+
+        // 添加回车键触发解析
+        document.getElementById('url').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                parseUrl();
+            }
+        });
+        document.getElementById('password').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                parseUrl();
+            }
+        });
+    </script>
+</body>
+</html> 

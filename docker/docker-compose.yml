@@ -1,0 +1,22 @@
+version: '3.8'
+
+networks:
+  lanzou-api-network:
+    external: true
+
+services:
+  lanzou-api:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: lanzou-api
+    restart: always
+    ports:
+      - "36525:8000"
+    networks:
+      - lanzou-api-network
+    volumes:
+      - ../lanzou_api.py:/app/lanzou_api.py
+      - ../templates:/app/templates
+    environment:
+      - TZ=Asia/Shanghai

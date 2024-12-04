@@ -1,0 +1,69 @@
+/* 通用样式 */
+body {
+    background-color: #f8f9fa;
+}
+
+.navbar {
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+}
+
+.container {
+    max-width: 800px;
+    margin-top: 30px;
+}
+
+/* 返回顶部按钮样式 */
+.back-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #0d6efd;
+    color: white;
+    text-align: center;
+    line-height: 40px;
+    cursor: pointer;
+    display: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 1000;
+}
+
+.back-to-top:hover {
+    background-color: #0b5ed7;
+    transform: translateY(-2px);
+}
+
+/* 代码块和卡片的基本样式 */
+.code-block {
+    background: #1e1e1e;
+    color: #d4d4d4;
+    padding: 15px;
+    border-radius: 5px;
+    margin: 10px 0;
+    font-family: 'Consolas', 'Monaco', monospace;
+    line-height: 1.5;
+}
+
+code {
+    font-family: 'Consolas', 'Monaco', monospace;
+}
+
+.feature-card, .test-card {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.result-card {
+    background: #1e1e1e;
+    color: #d4d4d4;
+    border-radius: 10px;
+    font-family: 'Consolas', 'Monaco', monospace;
+} 

@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>蓝奏云直链解析</title>
+    <link rel="icon" type="image/png" href="/favicon.ico">
+    <link rel="icon" href="/favicon.ico">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/static/css/common.css">
+    <style>
+        /* index.html 特有的样式 */
+        .icon-feature {
+            font-size: 24px;
+            color: #0d6efd;
+            margin-bottom: 10px;
+        }
+        .btn-test {
+            padding: 12px 30px;
+            font-size: 1.2em;
+        }
+        .main-container {
+            margin-top: 20px;
+        }
+        .navbar .btn {
+            padding: 6px 12px;
+            font-size: 14px;
+        }
+        .navbar .btn i {
+            margin-right: 4px;
+        }
+        .domain-list {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        .domain-list code {
+            color: #0d6efd;
+            background: #e9ecef;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin: 0 2px;
+        }
+        .domain-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            margin: 15px 0;
+        }
+        .domain-item {
+            background: #f8f9fa;
+            padding: 8px 12px;
+            border-radius: 6px;
+            text-align: center;
+            font-family: 'Consolas', 'Monaco', monospace;
+            color: #0d6efd;
+        }
+        .url-format {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 10px 0;
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .code-block .text-info { color: #9cdcfe !important; }
+        .code-block .text-success { color: #ce9178 !important; }
+        .code-block .text-warning { color: #b5cea8 !important; }
+        .code-block .text-muted { color: #6a9955 !important; }
+        .list-unstyled .bi-dot {
+            color: #0d6efd;
+            font-size: 1.2em;
+            vertical-align: -2px;
+            margin-right: 5px;
+        }
+        
+        .feature-card h5 .bi {
+            margin-right: 8px;
+            color: #0d6efd;
+        }
+        
+        .feature-card ul li {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        /* 添加表格样式 */
+        .table td, .table th {
+            vertical-align: middle !important;  /* 强制垂直居中 */
+            padding: 12px 15px;
+        }
+        
+        /* 如果表格在 alert 内，也保持居中 */
+        .alert .table td, .alert .table th {
+            vertical-align: middle !important;
+        }
+        
+        /* 表格内的列表去除下边距 */
+        .table td ul {
+            margin-bottom: 0;
+            padding-left: 20px;
+        }
+        
+        /* 表格内的列表项行高 */
+        .table td ul li {
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="bi bi-lightning-charge"></i> 蓝奏云直链解析
+            </a>
+            <div class="ms-auto">
+                <a href="https://ylbolg.top" class="btn btn-outline-primary me-2" target="_blank">
+                    <i class="bi bi-journal-text"></i> 博客
+                </a>
+                <a href="https://github.com/DEKVIW" class="btn btn-outline-dark" target="_blank">
+                    <i class="bi bi-github"></i> GitHub
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container main-container">
+        <div class="text-center mb-5">
+            <h1 class="display-4 mb-3">蓝奏云直链解析</h1>
+            <p class="lead text-muted">快速解析蓝奏云分享链接，获取直接下载地址</p>
+            <a href="/test" class="btn btn-primary btn-lg btn-test">
+                <i class="bi bi-lightning-charge"></i> 立即测试
+            </a>
+        </div>
+
+        <div class="row mb-5">
+            <div class="col-md-4">
+                <div class="feature-card text-center">
+                    <i class="bi bi-lightning-charge icon-feature"></i>
+                    <h5>快速解析</h5>
+                    <p class="text-muted">秒级解析直链地址</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card text-center">
+                    <i class="bi bi-shield-check icon-feature"></i>
+                    <h5>稳定可靠</h5>
+                    <p class="text-muted">支持最新蓝奏云链接</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card text-center">
+                    <i class="bi bi-info-circle icon-feature"></i>
+                    <h5>详细信息</h5>
+                    <p class="text-muted">返回文件名、大小等信息</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="feature-card mb-4">
+            <h4><i class="bi bi-globe"></i> 支持的蓝奏云域名</h4>
+            <div class="domain-grid">
+                <div class="domain-item">lanzou.com</div>
+                <div class="domain-item">lanzoub.com</div>
+                <div class="domain-item">lanzouc.com</div>
+                <div class="domain-item">lanzoue.com</div>
+                <div class="domain-item">lanzouf.com</div>
+                <div class="domain-item">lanzouh.com</div>
+                <div class="domain-item">lanzoui.com</div>
+                <div class="domain-item">lanzouj.com</div>
+                <div class="domain-item">lanzouk.com</div>
+                <div class="domain-item">lanzoul.com</div>
+                <div class="domain-item">lanzoum.com</div>
+                <div class="domain-item">lanzouo.com</div>
+                <div class="domain-item">lanzoup.com</div>
+                <div class="domain-item">lanzouq.com</div>
+                <div class="domain-item">lanzout.com</div>
+                <div class="domain-item">lanzouu.com</div>
+                <div class="domain-item">lanzouv.com</div>
+                <div class="domain-item">lanzouw.com</div>
+                <div class="domain-item">lanzoux.com</div>
+                <div class="domain-item">lanzouy.com</div>
+            </div>
+
+            <h5 class="mt-4">支持的链接格式：</h5>
+            <div class="url-format">
+                <p>1. 标准格式：https://www.lanzou*.com/xxxxx</p>
+                <p>2. 子域名格式：https://xxx.lanzou*.com/xxxxx</p>
+            </div>
+
+            <div class="alert alert-info mt-3">
+                <i class="bi bi-info-circle"></i> 
+                支持HTTP和HTTPS协议，支持任意子域名（如pan、dev等）
+            </div>
+        </div>
+
+        <div class="feature-card">
+            <h3 class="mb-4"><i class="bi bi-book"></i> API 接口文档</h3>
+            
+            <h5 class="mt-4">1. 接口概述</h5>
+            <p>本API提供蓝奏云分享链接的解析服务，可获取直接下载地址和文件信息。支持带密码和无密码的链接。</p>
+
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <tr>
+                        <td width="120">接口地址</td>
+                        <td><code>https://api.example.com/parse</code></td>
+                    </tr>
+                    <tr>
+                        <td>请求方式</td>
+                        <td><code>POST</code></td>
+                    </tr>
+                    <tr>
+                        <td>数据格式</td>
+                        <td><code>application/json</code></td>
+                    </tr>
+                </table>
+            </div>
+
+            <h5 class="mt-4">2. 请求参数</h5>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <tr>
+                        <th>参数名</th>
+                        <th>类型</th>
+                        <th>必填</th>
+                        <th>说明</th>
+                    </tr>
+                    <tr>
+                        <td><code>url</code></td>
+                        <td>string</td>
+                        <td>是</td>
+                        <td>蓝奏云分享链接，支持所有蓝奏云域名</td>
+                    </tr>
+                    <tr>
+                        <td><code>password</code></td>
+                        <td>string</td>
+                        <td>否</td>
+                        <td>分享链接的访问密码（如有）</td>
+                    </tr>
+                </table>
+            </div>
+
+            <h5 class="mt-4">3. 响应参数</h5>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <tr>
+                        <th>参数名</th>
+                        <th>类型</th>
+                        <th>说明</th>
+                        <th>示例值</th>
+                    </tr>
+                    <tr>
+                        <td><code>code</code></td>
+                        <td>integer</td>
+                        <td>状态码：200成功，400请求错误，500服务器错误</td>
+                        <td>200</td>
+                    </tr>
+                    <tr>
+                        <td><code>msg</code></td>
+                        <td>string</td>
+                        <td>状态描述</td>
+                        <td>"解析成功"</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.download_url</code></td>
+                        <td>string</td>
+                        <td>文件直接下载地址</td>
+                        <td>"https://xxx.lanzoui.com/file/xxx"</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.filename</code></td>
+                        <td>string</td>
+                        <td>文件名称</td>
+                        <td>"example.zip"</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.file_size</code></td>
+                        <td>string</td>
+                        <td>文件大小</td>
+                        <td>"1.5 MB"</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.upload_time</code></td>
+                        <td>string</td>
+                        <td>上传时间(YYYY-MM-DD)</td>
+                        <td>"2024-01-20"</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.file_type</code></td>
+                        <td>string</td>
+                        <td>文件类型</td>
+                        <td>"压缩包"</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.uploader</code></td>
+                        <td>string</td>
+                        <td>上传者名称</td>
+                        <td>"用户名"</td>
+                    </tr>
+                </table>
+            </div>
+
+            <h5 class="mt-4">4. 请求示例</h5>
+            <pre class="code-block"><code><span class="text-muted"># cURL</span>
+curl -X POST "https://api.example.com/parse" \
+     -H "Content-Type: application/json" \
+     -d '{"url": "https://www.lanzoui.com/xxxxx", "password": "1234"}'
+
+<span class="text-muted"># Python</span>
+import requests
+
+response = requests.post(
+    "https://api.example.com/parse",
+    json={
+        "url": "https://www.lanzoui.com/xxxxx",
+        "password": "1234"  # 可选
+    }
+)
+result = response.json()</code></pre>
+
+            <h5 class="mt-4">5. 响应示例</h5>
+            <pre class="code-block"><code><span class="text-muted"># 成功响应</span>
+{
+    <span class="text-info">"code"</span>: <span class="text-warning">200</span>,
+    <span class="text-info">"msg"</span>: <span class="text-success">"解析成功"</span>,
+    <span class="text-info">"data"</span>: {
+        <span class="text-info">"download_url"</span>: <span class="text-success">"https://xxx.lanzoui.com/file/xxxxx"</span>,
+        <span class="text-info">"filename"</span>: <span class="text-success">"example.zip"</span>,
+        <span class="text-info">"file_size"</span>: <span class="text-success">"1.5 MB"</span>,
+        <span class="text-info">"upload_time"</span>: <span class="text-success">"2024-01-20"</span>,
+        <span class="text-info">"file_type"</span>: <span class="text-success">"压缩包"</span>,
+        <span class="text-info">"uploader"</span>: <span class="text-success">"用户名"</span>
+    }
+}
+
+<span class="text-muted"># 错误响应</span>
+{
+    <span class="text-info">"code"</span>: <span class="text-warning">400</span>,
+    <span class="text-info">"msg"</span>: <span class="text-success">"无效的蓝奏云链接"</span>
+}</code></pre>
+
+            <h5 class="mt-4">6. 错误代码说明</h5>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <tr>
+                        <th>状态码</th>
+                        <th>说明</th>
+                        <th>处理建议</th>
+                    </tr>
+                    <tr>
+                        <td>200</td>
+                        <td>解析成功</td>
+                        <td>成功获取下载链接和文件信息</td>
+                    </tr>
+                    <tr>
+                        <td>400</td>
+                        <td>请求参数错误</td>
+                        <td>
+                            <ul class="mb-0">
+                                <li>检查链接格式是否正确</li>
+                                <li>检查链接是否可访问</li>
+                                <li>如提示需要密码，请添加password参数</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>429</td>
+                        <td>请求过于频繁</td>
+                        <td>请降低请求频率，建议间隔1秒以上</td>
+                    </tr>
+                    <tr>
+                        <td>500</td>
+                        <td>服务器内部错误</td>
+                        <td>
+                            <ul class="mb-0">
+                                <li>服务器解析失败，请稍后重试</li>
+                                <li>如持续出现请联系管理员</li>
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="alert alert-info mt-4">
+                <h5><i class="bi bi-info-circle"></i> 常见错误信息说明：</h5>
+                <div class="table-responsive mt-2">
+                    <table class="table table-bordered mb-0">
+                        <tr>
+                            <th>错误信息</th>
+                            <th>说明</th>
+                        </tr>
+                        <tr>
+                            <td>"无效的蓝奏云链接"</td>
+                            <td>链接格式错误或不是有效的蓝奏云分享链接</td>
+                        </tr>
+                        <tr>
+                            <td>"该链接需要访问密码"</td>
+                            <td>分享链接设置了密码，需要在请求时提供password参数</td>
+                        </tr>
+                        <tr>
+                            <td>"密码错误"</td>
+                            <td>提供的访问密码不正确，请检查后重试</td>
+                        </tr>
+                        <tr>
+                            <td>"请求过于频繁"</td>
+                            <td>超出频率限制，请降低请求频率</td>
+                        </tr>
+                        <tr>
+                            <td>"解析失败"</td>
+                            <td>服务器解析出错，可能是链接失效或暂时无法访问</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="alert alert-warning mt-4">
+                <h5><i class="bi bi-exclamation-triangle"></i> 注意事项：</h5>
+                <ul class="mb-0">
+                    <li>请控制请求频率，建议每秒不超过1次请求</li>
+                    <li>返回的直链地址有效期较短，请及时使用</li>
+                    <li>如遇到解析失败，可以稍后重试</li>
+                    <li>本接口仅供学习交流使用，请勿用于商业用途</li>
+                </ul>
+            </div>
+
+            <div class="alert alert-info mt-4">
+                <h5><i class="bi bi-lightbulb"></i> 使用建议：</h5>
+                <ul class="mb-0">
+                    <li>建议在请求头中添加 User-Agent 以提高成功率</li>
+                    <li>批量解析时建议加入适当延时（1秒以上）</li>
+                    <li>如需解析大量链接，建议分批进行</li>
+                    <li>遇到解析失败时，可以查看返回的错误信息进行排查</li>
+                </ul>
+            </div>
+        </div>
+
+        <footer class="text-center mt-5 text-muted">
+            <p>本站仅供学习交流使用，请勿用于非法用途</p>
+        </footer>
+    </div>
+
+    <div class="back-to-top" id="backToTop" onclick="scrollToTop()">
+        <i class="bi bi-arrow-up"></i>
+    </div>
+
+    <script src="/static/js/common.js"></script>
+</body>
+</html> 
